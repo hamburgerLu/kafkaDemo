@@ -23,24 +23,42 @@ public class KafkaConsumerConfig {
     @Value("${lu.kafka.binder.brokers}")
     private String brokers;
 
-    @Value("${lu.kafka.group}")
-    private String group;
+    @Value("${lu.kafka.group1}")
+    private String group1;
+
+    @Value("${lu.kafka.group2}")
+    private String group2;
 
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory1() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<String, String>();
-        factory.setConsumerFactory(consumerFactory());
+        factory.setConsumerFactory(consumerFactory1());
         factory.setConcurrency(4);
         factory.getContainerProperties().setPollTimeout(4000);
         return factory;
     }
+
+
+    @Bean
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory2() {
+        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<String, String>();
+        factory.setConsumerFactory(consumerFactory2());
+        factory.setConcurrency(4);
+        factory.getContainerProperties().setPollTimeout(4000);
+        return factory;
+    }
+
 
     @Bean
     public KafkaListeners kafkaListeners() {
         return new KafkaListeners();
     }
 
-    public ConsumerFactory<String, String> consumerFactory() {
+
+
+
+
+    public ConsumerFactory<String, String> consumerFactory1() {
         Map<String, Object> properties = new HashMap<String, Object>();
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);
         properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
@@ -48,7 +66,21 @@ public class KafkaConsumerConfig {
         properties.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "15000");
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        properties.put(ConsumerConfig.GROUP_ID_CONFIG, group);
+        properties.put(ConsumerConfig.GROUP_ID_CONFIG, group1);
+        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
+        return new DefaultKafkaConsumerFactory<String, String>(properties);
+    }
+
+
+    public ConsumerFactory<String, String> consumerFactory2() {
+        Map<String, Object> properties = new HashMap<String, Object>();
+        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);
+        properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+        properties.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "100");
+        properties.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "15000");
+        properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        properties.put(ConsumerConfig.GROUP_ID_CONFIG, group2);
         properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
         return new DefaultKafkaConsumerFactory<String, String>(properties);
     }

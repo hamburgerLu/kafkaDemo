@@ -1,6 +1,7 @@
 package com.example.kafka.senders;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.kafka.constant.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,7 @@ public class TestController {
         json.put("id",110L);
         json.put("Cproductname","腾讯");
 
-        kafkaTemplate.send("boot", json.toString());
+        kafkaTemplate.send(Constants.topic , json.toString());
     }
 
 }

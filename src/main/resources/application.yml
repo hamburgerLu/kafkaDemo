@@ -1,6 +1,9 @@
 lu:
   kafka:
     binder:
-      brokers: 127.0.0.1:9092
-      zk-nodes: 127.0.0.1:2181
-    group: lu-group
+      brokers: 127.0.0.1:9092     #这里是kafka的节点
+      zk-nodes: 127.0.0.1:2181    #这里是zk的节点
+    group1: lu-group-1               #这里就相当于是一个群组，在同一个group下的consumer其实只能收到一份消息
+    group2: lu-group-2               #这里就相当于是一个群组，在同一个group下的consumer其实只能收到一份消息
+    topics:
+      topic1: boot
